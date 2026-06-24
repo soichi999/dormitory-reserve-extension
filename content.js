@@ -272,12 +272,43 @@ async function confirmOrder() {
 }
 
 // ================================================================
+// 操作禁止オーバーレイ
+// ================================================================
+
+function showOverlay() {
+  if (document.getElementById('__reserve-overlay')) return;
+  const el = document.createElement('div');
+  el.id = '__reserve-overlay';
+  el.style.cssText = `
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: #dc2626;
+    color: #fff;
+    text-align: center;
+    padding: 14px 16px;
+    font-size: 15px;
+    font-weight: bold;
+    z-index: 2147483647;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    letter-spacing: 0.03em;
+  `;
+  el.textContent = '⚠️ 自動で予約処理がされます。何も操作をしないでください。';
+  document.body.appendChild(el);
+}
+
+function hideOverlay() {
+  const el = document.getElementById('__reserve-overlay');
+  if (el) el.remove();
+}
+
+// ================================================================
 // メイン予約処理
 // ================================================================
 
 async function reserveOne(loginInfo, item) {
   const { date, meal } = item;
   console.log("[予約] 開始:", date, meal);
+  showOverlay();
 
   const steps = [
     ["Step1(ストア一覧)",     () => goToStores()],
@@ -300,10 +331,12 @@ async function reserveOne(loginInfo, item) {
     } catch (e) {
       console.error("[予約]", name, "失敗:", e.message);
       if (name === "Step9(支払い方法)") continue;
+      hideOverlay();
       return { success: false, message: `${name}: ${e.message}` };
     }
   }
 
+  hideOverlay();
   console.log("[予約] 全ステップ完了!");
   return { success: true, message: "予約完了" };
 }
