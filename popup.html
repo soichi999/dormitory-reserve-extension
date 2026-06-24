@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <span class="icon">🍱</span>
+      <h1>食堂まとめ予約</h1>
+    </header>
+
+    <!-- ログインセクション -->
+    <section id="login-section">
+      <div class="section-title">ログイン情報</div>
+
+      <div class="field-row">
+        <label>メール</label>
+        <input type="text" id="login-email" placeholder="例: user@yahoo.ne.jp" autocomplete="off">
+      </div>
+
+      <div class="field-row">
+        <label>電話番号</label>
+        <input type="text" id="login-phone" placeholder="例: 09012345678" autocomplete="off">
+      </div>
+
+      <div class="field-row">
+        <label>号室＋氏名</label>
+        <input type="text" id="login-room" placeholder="例: 101田中太郎" autocomplete="off">
+      </div>
+
+      <div class="field-row">
+        <label>パスワード</label>
+        <input type="password" id="password" placeholder="パスワード" autocomplete="off">
+      </div>
+
+      <div class="field-row remember-row">
+        <label class="checkbox-label">
+          <input type="checkbox" id="remember"> ログイン情報を保存する
+        </label>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- 予約グリッド -->
+    <section id="grid-section">
+      <div class="section-title">予約する食事を選択</div>
+
+      <table id="meal-grid">
+        <thead>
+          <tr>
+            <th class="col-date">日付</th>
+            <th class="col-meal">朝食<br><span class="price">¥300</span></th>
+            <th class="col-meal">夕食<br><span class="price">¥500</span></th>
+          </tr>
+        </thead>
+        <tbody id="grid-body">
+          <!-- popup.js で生成 -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 合計 -->
+    <div id="total-bar">
+      <span id="total-text">食事を選択してください</span>
+    </div>
+
+    <!-- 予約ボタン -->
+    <button id="reserve-btn" disabled>予約する</button>
+
+    <!-- 進捗・結果 -->
+    <div id="progress-section" style="display:none">
+      <div id="progress-label">予約中... <span id="progress-counter">0</span> / <span id="progress-total">0</span> 件完了</div>
+      <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+      <ul id="result-list"></ul>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "食堂まとめ予約",
+  "version": "1.0.0",
+  "description": "湘南藤沢国際寮の食堂予約を一括管理",
+  "permissions": ["storage", "tabs", "scripting", "activeTab", "notifications"],
+  "host_permissions": [
+    "https://shonanfujisawa-international-dormitory.mo-order.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "食堂まとめ予約"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://shonanfujisawa-international-dormitory.mo-order.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

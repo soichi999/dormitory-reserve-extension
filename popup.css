@@ -1,0 +1,189 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, "Hiragino Sans", "Yu Gothic UI", sans-serif;
+  font-size: 13px;
+  width: 360px;
+  background: #f7f8fa;
+  color: #1a1a2e;
+}
+
+#app { padding: 0 0 8px; }
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #2563eb;
+  color: white;
+  padding: 12px 16px;
+}
+header .icon { font-size: 20px; }
+header h1 { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+
+section {
+  background: white;
+  margin: 10px 10px 0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 10px;
+}
+
+/* ---- ログインフォーム ---- */
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.field-row label {
+  width: 68px;
+  font-size: 12px;
+  color: #374151;
+  flex-shrink: 0;
+}
+.field-row select,
+.field-row input[type="text"],
+.field-row input[type="password"] {
+  flex: 1;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 12px;
+  outline: none;
+  background: #f9fafb;
+  transition: border-color .15s;
+}
+.field-row select:focus,
+.field-row input:focus { border-color: #2563eb; background: white; }
+
+.remember-row { margin-top: 4px; }
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  cursor: pointer;
+  width: auto;
+}
+
+hr { border: none; border-top: 1px solid #e5e7eb; margin: 0 10px; }
+
+/* ---- 予約グリッド ---- */
+#meal-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+#meal-grid th {
+  background: #f3f4f6;
+  padding: 6px 4px;
+  text-align: center;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+#meal-grid th.col-date { text-align: left; padding-left: 8px; }
+#meal-grid th.col-meal { width: 90px; }
+
+.price { font-size: 10px; font-weight: 400; color: #6b7280; }
+
+#meal-grid td {
+  padding: 6px 4px;
+  text-align: center;
+  border-bottom: 1px solid #f3f4f6;
+}
+#meal-grid td.col-date {
+  text-align: left;
+  padding-left: 8px;
+  color: #1f2937;
+}
+#meal-grid tr:last-child td { border-bottom: none; }
+
+#meal-grid input[type="checkbox"] {
+  width: 16px; height: 16px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+#meal-grid input[type="checkbox"]:disabled { cursor: not-allowed; opacity: 0.3; }
+
+.deadline-label {
+  font-size: 10px;
+  color: #9ca3af;
+  display: block;
+}
+
+/* ---- 合計バー ---- */
+#total-bar {
+  background: #eff6ff;
+  margin: 10px 10px 0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #1d4ed8;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ---- 予約ボタン ---- */
+#reserve-btn {
+  display: block;
+  width: calc(100% - 20px);
+  margin: 10px 10px 0;
+  padding: 11px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+#reserve-btn:hover:not(:disabled) { background: #1d4ed8; }
+#reserve-btn:active:not(:disabled) { transform: scale(0.98); }
+#reserve-btn:disabled { background: #93c5fd; cursor: not-allowed; }
+
+/* ---- 進捗 ---- */
+#progress-section {
+  margin: 10px 10px 0;
+  background: white;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+#progress-bar-wrap {
+  height: 4px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+#progress-bar {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 2px;
+  transition: width .3s;
+  width: 0%;
+}
+#result-list {
+  list-style: none;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+#result-list li { display: flex; align-items: center; gap: 6px; }
+#result-list li.ok  { color: #059669; }
+#result-list li.ng  { color: #dc2626; }
+#result-list li.ing { color: #6b7280; }
