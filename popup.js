@@ -10,10 +10,10 @@ const DINNER_PRICE    = 500;
 
 // --- 締切計算 ---
 function canReserveBreakfast(d) {
-  // 前日21:00まで
+  // 前日09:00まで
   const deadline = new Date(d);
   deadline.setDate(deadline.getDate() - 1);
-  deadline.setHours(21, 0, 0, 0);
+  deadline.setHours(9, 0, 0, 0);
   return Date.now() < deadline.getTime();
 }
 function canReserveDinner(d) {
