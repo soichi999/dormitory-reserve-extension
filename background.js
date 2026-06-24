@@ -10,15 +10,14 @@ function sleep(ms) {
 }
 
 async function waitForTabLoad(tabId) {
-  await sleep(500); // ナビゲーション開始を待つ
-  for (let i = 0; i < 30; i++) {
+  await sleep(200); // ナビゲーション開始を待つ
+  for (let i = 0; i < 60; i++) {
     const tab = await new Promise(resolve =>
       chrome.tabs.get(tabId, t => resolve(chrome.runtime.lastError ? null : t))
     );
     if (tab && tab.status === "complete") return;
-    await sleep(500);
+    await sleep(200);
   }
-  // 15秒経っても完了しなければ続行
 }
 
 function getOrOpenReservationTab() {
@@ -52,19 +51,46 @@ function sendToTab(tabId, message) {
   });
 }
 
+// タブ読み込み完了直後に警告オーバーレイを表示
+async function showOverlayOnTab(tabId) {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      func: () => {
+        if (document.getElementById('__reserve-overlay')) return;
+        const el = document.createElement('div');
+        el.id = '__reserve-overlay';
+        el.style.cssText = `
+          position: fixed;
+          top: 0; left: 0; right: 0;
+          background: #dc2626;
+          color: #fff;
+          text-align: center;
+          padding: 14px 16px;
+          font-size: 15px;
+          font-weight: bold;
+          z-index: 2147483647;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+          letter-spacing: 0.03em;
+        `;
+        el.textContent = '⚠️ 自動で予約処理がされます。何も操作をしないでください。';
+        document.body.appendChild(el);
+      },
+    });
+  } catch (e) {
+    console.warn("[BG] オーバーレイ表示失敗:", e.message);
+  }
+}
+
 async function handleReservations(loginInfo, selections) {
   const results = [];
   console.log("[BG] 予約開始", selections.length, "件");
 
   let tab;
   try {
-    console.log("[BG] タブを取得中...");
     tab = await getOrOpenReservationTab();
-    console.log("[BG] タブID:", tab.id, "ロード待ち...");
     await waitForTabLoad(tab.id);
-    console.log("[BG] タブロード完了、SPA描画待ち...");
     await sleep(2000);
-    console.log("[BG] 準備完了");
   } catch (e) {
     console.error("[BG] タブ準備失敗:", e.message);
     await chrome.storage.local.set({
@@ -76,8 +102,6 @@ async function handleReservations(loginInfo, selections) {
 
   for (const item of selections) {
     console.log("[BG] ストアページへ遷移:", item.date, item.meal);
-    // 毎回 /stores に遷移してから content.js に指示
-    // → ページリロードで確実に初期状態に戻す
     try {
       await new Promise((resolve, reject) => {
         chrome.tabs.update(tab.id, { url: STORE_URL }, t => {
@@ -86,10 +110,14 @@ async function handleReservations(loginInfo, selections) {
         });
       });
       await waitForTabLoad(tab.id);
-      await sleep(1200); // SPA 描画待ち
+
+      // ページ読み込み完了直後に警告を表示
+      await showOverlayOnTab(tab.id);
+
+      await sleep(800); // SPA 描画待ち
     } catch (e) {
       console.warn("[BG] タブ遷移エラー（続行）:", e.message);
-      await sleep(1000);
+      await sleep(800);
     }
 
     console.log("[BG] 予約送信:", item.date, item.meal);
@@ -117,7 +145,7 @@ async function handleReservations(loginInfo, selections) {
   notify(`予約完了: ${okCount}/${selections.length} 件成功`);
 }
 
-function notify(message, okCount, total) {
+function notify(message) {
   chrome.notifications.create({
     type: "basic",
     iconUrl: "icon.png",
