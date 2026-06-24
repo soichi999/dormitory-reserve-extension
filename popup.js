@@ -156,9 +156,6 @@ function initProgress(total) {
   progressBar.style.width = "0%";
   progressSection.style.display = "block";
   document.getElementById("reserve-btn").disabled = true;
-  document.getElementById("progress-counter").textContent = "0";
-  document.getElementById("progress-total").textContent = String(total);
-  document.getElementById("progress-label").textContent = `予約中... 0 / ${total} 件完了`;
 }
 
 function addResult(index, total, item, success, message) {
@@ -177,13 +174,14 @@ function addResult(index, total, item, success, message) {
 
   resultList.appendChild(li);
   progressBar.style.width = `${(index / total) * 100}%`;
-  document.getElementById("progress-counter").textContent = String(index);
-  document.getElementById("progress-label").textContent = `予約中... ${index} / ${total} 件完了`;
 }
 
 function finishProgress(total, okCount) {
   progressBar.style.width = "100%";
-  document.getElementById("progress-label").textContent = `完了: ${okCount} / ${total} 件成功`;
+  const summary = document.createElement("li");
+  summary.style.cssText = "margin-top:6px;font-weight:700;color:#1f2937";
+  summary.textContent = `完了: ${okCount}/${total} 件成功`;
+  resultList.appendChild(summary);
   document.getElementById("reserve-btn").disabled = false;
   document.getElementById("reserve-btn").textContent = "予約する";
 }
